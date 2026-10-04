@@ -1,0 +1,48 @@
+{
+  "name": "ceic-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24.13.0", "npm": ">=11" },
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "auth:generate": "auth generate --config scripts/auth.config.ts --adapter drizzle --dialect postgresql --output src/database/schema/auth.schema.ts --yes && node scripts/clean-auth-schema.mjs",
+    "auth:admin": "auth create-admin --config scripts/auth.config.ts --role admin",
+    "schema:generate": "npm run auth:generate && npm run db:generate",
+    "setup": "npm run schema:generate && docker compose up -d --wait postgres && npm run db:migrate",
+    "docker:up": "docker compose up -d --build --wait",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "test": "npm run build && node --test --test-concurrency=1 test/*.test.mjs"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "1.7.7",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
+    "@thallesp/nestjs-better-auth": "2.8.0",
+    "better-auth": "1.7.7",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "drizzle-orm": "0.45.3",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "resend": "6.32.0",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.5",
+    "auth": "1.7.7",
+    "drizzle-kit": "0.31.11",
+    "typescript": "^5.9.2"
+  }
+}
