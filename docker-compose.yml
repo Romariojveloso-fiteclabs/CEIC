@@ -8,11 +8,18 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ceic}
       POSTGRES_DB: ${POSTGRES_DB:-ceic}
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-15432}:5432"
+    networks:
+      - ceic_net
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test:
+        - CMD-SHELL
+        - >-
+          PGPASSWORD="$$POSTGRES_PASSWORD" psql -h 127.0.0.1
+          -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+          -v ON_ERROR_STOP=1 -c 'SELECT 1' > /dev/null
       interval: 3s
       timeout: 3s
       retries: 20
@@ -26,6 +33,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-ceic}:${POSTGRES_PASSWORD:-ceic}@postgres:5432/${POSTGRES_DB:-ceic}
     ports:
       - "127.0.0.1:${PORT:-3000}:${PORT:-3000}"
+    networks:
+      - ceic_net
     depends_on:
       postgres:
         condition: service_healthy
@@ -35,6 +44,10 @@ services:
       timeout: 3s
       retries: 15
       start_period: 10s
+
+networks:
+  ceic_net:
+    name: ceic_net
 
 volumes:
   postgres_data:

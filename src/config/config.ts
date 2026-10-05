@@ -1,7 +1,7 @@
 import { env } from './env.js';
 
 export const config = Object.freeze({
-  app: { port: env.port, production: env.nodeEnv === 'production' },
+  app: { port: env.port, production: env.nodeEnv === 'production', swagger: env.swaggerEnabled },
   database: { url: env.databaseUrl },
   auth: {
     secret: env.secret,

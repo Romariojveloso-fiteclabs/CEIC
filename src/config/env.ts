@@ -49,9 +49,14 @@ function readEnv() {
   if (nodeEnv === 'production' && [authUrl, frontendUrl, ...corsOrigins].some((url) => !url.startsWith('https://'))) {
     throw new Error('URLs públicas devem usar HTTPS em produção.');
   }
+  const swaggerFlag = process.env.SWAGGER_ENABLED?.trim();
+  if (swaggerFlag && !['true', 'false'].includes(swaggerFlag)) {
+    throw new Error('SWAGGER_ENABLED deve ser true ou false.');
+  }
   return Object.freeze({
     nodeEnv,
     port,
+    swaggerEnabled: swaggerFlag ? swaggerFlag === 'true' : nodeEnv !== 'production',
     databaseUrl,
     secret,
     authUrl,

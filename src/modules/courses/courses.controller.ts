@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { ApiCookieAuth } from '@nestjs/swagger';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { RequirePermission } from '../../auth/permissions.js';
 import { CoursesService } from './courses.service.js';
@@ -23,24 +24,28 @@ export class CoursesController {
   }
 
   @Post()
+  @ApiCookieAuth()
   @RequirePermission('content:create')
   create(@Body() input: CreateCourseDto) {
     return this.courses.create(input);
   }
 
   @Patch(':id')
+  @ApiCookieAuth()
   @RequirePermission('content:update')
   update(@Param('id', new ParseUUIDPipe()) id: string, @Body() input: UpdateCourseDto) {
     return this.courses.update(id, input);
   }
 
   @Patch(':id/publish')
+  @ApiCookieAuth()
   @RequirePermission('content:publish')
   publish(@Param('id', new ParseUUIDPipe()) id: string, @Body() input: PublishCourseDto) {
     return this.courses.publish(id, input.published);
   }
 
   @Delete(':id')
+  @ApiCookieAuth()
   @RequirePermission('content:delete')
   @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
