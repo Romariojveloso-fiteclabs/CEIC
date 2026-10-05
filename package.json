@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24.13.0", "npm": ">=11" },
+  "engines": {
+    "node": ">=24.13.0",
+    "npm": ">=11"
+  },
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
@@ -13,6 +16,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:seed": "node --import tsx src/database/helpers/seed.ts",
     "auth:generate": "auth generate --config scripts/auth.config.ts --adapter drizzle --dialect postgresql --output src/database/schema/auth.schema.ts --yes && node scripts/clean-auth-schema.mjs",
     "auth:admin": "auth create-admin --config scripts/auth.config.ts --role admin",
     "schema:generate": "npm run auth:generate && npm run db:generate",
@@ -20,6 +24,8 @@
     "docker:up": "docker compose up -d --build --wait",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
+    "docker:dev:db": "docker compose --profile dev up -d --wait postgres-dev",
+    "docker:dev:down": "docker compose --profile dev down",
     "test": "npm run build && node --test --test-concurrency=1 test/*.test.mjs"
   },
   "dependencies": {
@@ -44,6 +50,13 @@
     "@types/pg": "^8.15.5",
     "auth": "1.7.7",
     "drizzle-kit": "0.31.11",
+    "tsx": "^4.19.3",
     "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.0"
+    },
+    "js-yaml": "^5.4.2"
   }
 }
