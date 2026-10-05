@@ -1,6 +1,7 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import { betterAuth } from 'better-auth';
 import { APIError, createAuthMiddleware } from 'better-auth/api';
+import { bearer, openAPI } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
 import { config } from '../config/config.js';
 import type { DatabaseService } from '../database/database.service.js';
@@ -52,6 +53,10 @@ export function createAuth(database: DatabaseService['db'], email: EmailService)
         }
       }),
     },
-    plugins: [admin({ ac: accessControl, roles, defaultRole, adminRoles: [adminRole] })],
+    plugins: [
+      admin({ ac: accessControl, roles, defaultRole, adminRoles: [adminRole] }),
+      openAPI(),
+      bearer(),
+    ],
   });
 }
