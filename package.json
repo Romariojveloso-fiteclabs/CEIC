@@ -25,8 +25,10 @@
     "docker:up": "docker compose up -d --build --wait",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:dev:db": "docker compose --profile dev up -d --wait postgres-dev",
-    "docker:dev:down": "docker compose --profile dev down",
+    "docker:db": "docker compose up -d --wait postgres",
+    "docker:db:down": "docker compose stop postgres",
+    "docker:dev:db": "docker compose up -d --wait postgres",
+    "docker:dev:down": "docker compose stop postgres",
     "test": "node --import ./scripts/ts-register.mjs --test --test-concurrency=1 test/*.test.mjs"
   },
   "dependencies": {

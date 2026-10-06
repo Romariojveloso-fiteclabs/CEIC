@@ -43,21 +43,8 @@ export async function seedDatabase(connectionUrl: string): Promise<void> {
 }
 
 export async function runSeeds(): Promise<void> {
-  const primaryUrl = process.env.DATABASE_URL || 'postgresql://admin:admin@localhost:5433/ceic';
-  const urlsToSeed = new Set<string>([primaryUrl]);
-
-  if (process.env.POSTGRES_PORT) {
-    const standardUrl = `postgresql://${process.env.POSTGRES_USER || 'ceic'}:${process.env.POSTGRES_PASSWORD || 'ceic'}@localhost:${process.env.POSTGRES_PORT}/ceic`;
-    urlsToSeed.add(standardUrl);
-  }
-
-  for (const url of urlsToSeed) {
-    try {
-      await seedDatabase(url);
-    } catch {
-      console.warn(`[Seed] Instancia indisponivel para conexao: ${url.replace(/:[^:@]+@/, ':***@')}`);
-    }
-  }
+  const primaryUrl = process.env.DATABASE_URL || 'postgresql://ceic:ceic@localhost:5433/ceic';
+  await seedDatabase(primaryUrl);
 }
 
 if (process.argv[1]?.endsWith('seed.ts') || process.argv[1]?.endsWith('seed.js')) {

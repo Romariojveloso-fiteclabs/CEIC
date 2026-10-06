@@ -58,22 +58,21 @@ npm run db:studio
 
 ## Docker
 
-### Banco de Dados para Desenvolvimento (PostgreSQL Dev)
+### Banco de Dados (PostgreSQL)
 
-Para subir apenas o container de banco de dados para desenvolvimento (`postgres-dev`), ativado pelo profile `dev`:
+Para subir apenas o container de banco de dados (`postgres`):
 
 ```bash
-npm run docker:dev:db
-npm run docker:dev:down
+npm run docker:db
+npm run docker:db:down
 ```
 
-Configurações do container `postgres-dev`:
-- Usuário: `admin`
-- Senha: `admin`
+Configurações do container `postgres`:
+- Usuário: `ceic`
+- Senha: `ceic`
 - Banco: `ceic`
-- Porta: `5433`
-- Profile: `dev` (ativado via `COMPOSE_PROFILES=dev` no `.env` ou `--profile dev`)
-- Inicialização automática com todas as tabelas e o usuário superadmin pré-configurado.
+- Porta no host: `5433` (mapeada para `5432` no container)
+- Volume: `postgres_data`
 
 ### Ambiente Completo (API + PostgreSQL)
 

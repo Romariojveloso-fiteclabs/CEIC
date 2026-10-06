@@ -8,40 +8,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ceic}
       POSTGRES_DB: ${POSTGRES_DB:-ceic}
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5434}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
     networks:
       - ceic_net
     volumes:
-      - postgres_data:/var/lib/postgresql
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - >-
-          PGPASSWORD="$$POSTGRES_PASSWORD" psql -h 127.0.0.1
-          -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
-          -v ON_ERROR_STOP=1 -c 'SELECT 1' > /dev/null
-      interval: 3s
-      timeout: 3s
-      retries: 20
-
-  postgres-dev:
-    build:
-      context: .
-      dockerfile: docker/postgres-dev.Dockerfile
-    image: ceic-postgres-dev:latest
-    container_name: ceic-postgres-dev
-    profiles:
-      - dev
-    environment:
-      POSTGRES_USER: ${POSTGRES_DEV_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_DEV_PASSWORD:-admin}
-      POSTGRES_DB: ${POSTGRES_DEV_DB:-ceic}
-    ports:
-      - "127.0.0.1:${POSTGRES_DEV_PORT:-5433}:5432"
-    networks:
-      - ceic_net
-    volumes:
-      - postgres_dev_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 3s
@@ -77,5 +48,4 @@ networks:
 
 volumes:
   postgres_data:
-  postgres_dev_data:
   media_data:
