@@ -94,7 +94,7 @@ describe('Autenticação, sessão e e-mails', () => {
     assert.equal(result.status, 200, JSON.stringify(result.data));
     for (const cookie of [author.cookie, other.cookie]) {
       assert.equal((await api.request('/api/auth/get-session', { cookie })).data, null);
-      assert.equal((await api.request('/api/courses', {
+      assert.equal((await api.request('/api/v1/admin/courses', {
         method: 'POST', cookie, body: { title: 'Revogado', slug: `${api.prefix}-revoked` },
       })).status, 401);
     }

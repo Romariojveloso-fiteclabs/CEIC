@@ -24,12 +24,12 @@ export async function startApi({ email = true } = {}) {
     assert.ok(['127.0.0.1', 'localhost'].includes(url.hostname));
     return actualFetch(input, options);
   });
-  const { createApp } = await import('../dist/app.js');
+  const { createApp } = await import('../src/app.js');
   const { AuthService } = await import('@thallesp/nestjs-better-auth');
-  const { DatabaseService } = await import('../dist/database/database.service.js');
-  const schema = await import('../dist/database/schema/auth.schema.js');
-  const { courses } = await import('../dist/database/schema/courses.schema.js');
-  const { config } = await import('../dist/config/config.js');
+  const { DatabaseService } = await import('../src/database/database.service.js');
+  const schema = await import('../src/database/schema/auth.schema.js');
+  const { courses } = await import('../src/database/schema/courses.schema.js');
+  const { config } = await import('../src/config/config.js');
   const app = await createApp();
   app.useLogger(false);
   const database = app.get(DatabaseService);
@@ -43,20 +43,26 @@ export async function startApi({ email = true } = {}) {
   const origin = config.cors.origin[0];
 
   async function request(path, { method = 'GET', body, cookie, requestOrigin = origin } = {}) {
+    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
     const response = await fetch(`${baseUrl}${path}`, {
       method,
       headers: {
         Origin: requestOrigin,
-        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...(isFormData ? {} : (body === undefined ? {} : { 'Content-Type': 'application/json' })),
         ...(cookie ? { Cookie: cookie } : {}),
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: isFormData ? body : (body === undefined ? undefined : JSON.stringify(body)),
       redirect: 'manual',
     });
     const text = await response.text();
-    const data = text ? JSON.parse(text) : undefined;
+    let data;
+    try {
+      data = text ? JSON.parse(text) : undefined;
+    } catch {
+      data = text;
+    }
     const cookies = response.headers.getSetCookie().map((value) => value.split(';')[0]).join('; ');
-    return { status: response.status, data, cookie: cookies, headers: response.headers };
+    return { status: response.status, data, text, cookie: cookies, headers: response.headers };
   }
 
   async function signUp(name, extra = {}) {
@@ -76,7 +82,7 @@ export async function startApi({ email = true } = {}) {
   }
 
   async function createAdmin() {
-    const { adminRole } = await import('../dist/auth/permissions.js');
+    const { adminRole } = await import('../src/auth/permissions.js');
     const email = `${prefix}-admin@example.invalid`;
     const { user } = await auth.api.createUser({ body: { name: 'Admin', email, password, role: adminRole } });
     users.push(user);

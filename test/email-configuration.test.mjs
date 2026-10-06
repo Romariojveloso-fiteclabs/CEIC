@@ -13,7 +13,7 @@ describe('Configuração ausente do Resend', () => {
   after(async () => { if (api) await api.close(); });
 
   it('API e login funcionam sem chave de e-mail', async () => {
-    assert.equal((await api.request('/api/courses')).status, 200);
+    assert.equal((await api.request('/api/v1/courses')).status, 200);
     assert.equal((await api.signIn(user.email)).status, 200);
   });
 
