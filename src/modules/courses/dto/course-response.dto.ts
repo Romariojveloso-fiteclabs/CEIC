@@ -1,24 +1,42 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CourseResponseDto {
-  @ApiProperty({ description: 'Identificador unico do curso (UUID)', example: '7afcb789-348c-4953-b2f6-bf51fa520008' })
+  @ApiProperty({ example: '7afcb789-348c-4953-b2f6-bf51fa520008', type: () => String })
   id!: string;
 
-  @ApiProperty({ description: 'Titulo do curso', example: 'TypeScript Avancado e Design Patterns' })
+  @ApiProperty({ example: 'TypeScript Avançado e Design Patterns', type: () => String })
   title!: string;
 
-  @ApiProperty({ description: 'Slug unico amigavel para URLs', example: 'typescript-avancado-design-patterns' })
+  @ApiProperty({ example: 'typescript-avancado-design-patterns', type: () => String })
   slug!: string;
 
-  @ApiProperty({ description: 'Descricao do conteudo e ementa do curso', example: 'Tipagem avancada, generics e tecnicas de arquitetura limpa.' })
+  @ApiPropertyOptional({ example: 'Resumo conciso do curso.', type: () => String })
+  shortDescription?: string | null;
+
+  @ApiProperty({ example: 'Conteúdo programático completo.', type: () => String })
   description!: string;
 
-  @ApiProperty({ description: 'Status de publicacao do curso na plataforma', example: true })
-  published!: boolean;
+  @ApiPropertyOptional({ example: '7afcb789-348c-4953-b2f6-bf51fa520008', type: () => String })
+  coverMediaId?: string | null;
 
-  @ApiProperty({ description: 'Data de criacao do registro', example: '2026-10-05T12:00:00.000Z' })
+  @ApiProperty({ example: 'published', enum: ['draft', 'published', 'archived'], type: () => String })
+  status!: string;
+
+  @ApiPropertyOptional({ example: '2026-10-05T12:00:00.000Z', type: () => Date })
+  publishedAt?: Date | null;
+
+  @ApiProperty({ example: '2026-10-05T12:00:00.000Z', type: () => Date })
   createdAt!: Date;
 
-  @ApiProperty({ description: 'Data da ultima atualizacao', example: '2026-10-05T12:30:00.000Z' })
+  @ApiProperty({ example: '2026-10-05T12:30:00.000Z', type: () => Date })
   updatedAt!: Date;
+
+  @ApiPropertyOptional({ example: '7afcb789-348c-4953-b2f6-bf51fa520008', type: () => String })
+  createdBy?: string | null;
+
+  @ApiPropertyOptional({ example: '7afcb789-348c-4953-b2f6-bf51fa520008', type: () => String })
+  updatedBy?: string | null;
+
+  @ApiPropertyOptional({ example: null, type: () => Date })
+  deletedAt?: Date | null;
 }
