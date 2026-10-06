@@ -1,12 +1,17 @@
 import { existsSync } from 'node:fs';
 import { loadEnvFile } from 'node:process';
-import { hashPassword } from 'better-auth/crypto';
-import { and, eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import { account, user } from '../schema/auth.schema.js';
-import { courses } from '../schema/courses.schema.js';
-import { seedCourses, seedUsers } from './seed-data.js';
+import { seedCohorts } from './cohorts.seed.js';
+import { seedCourses } from './courses.seed.js';
+import { seedDisciplines } from './disciplines.seed.js';
+import { seedMentorships } from './mentorships.seed.js';
+import { seedNews } from './news.seed.js';
+import { seedPages } from './pages.seed.js';
+import { seedPartners } from './partners.seed.js';
+import { seedPeople } from './people.seed.js';
+import { seedSiteSettings } from './site-settings.seed.js';
+import { seedUsers } from './users.seed.js';
 
 if (!process.env.DATABASE_URL && existsSync('.env')) {
   loadEnvFile('.env');
@@ -17,73 +22,19 @@ export async function seedDatabase(connectionUrl: string): Promise<void> {
   const db = drizzle(pool);
 
   try {
-    for (const item of seedUsers) {
-      const [insertedUser] = await db
-        .insert(user)
-        .values({
-          name: item.name,
-          email: item.email,
-          emailVerified: item.emailVerified,
-          role: item.role,
-          banned: item.banned ?? false,
-          banReason: item.banReason ?? null,
-        })
-        .onConflictDoUpdate({
-          target: user.email,
-          set: {
-            name: item.name,
-            role: item.role,
-            emailVerified: item.emailVerified,
-            banned: item.banned ?? false,
-            banReason: item.banReason ?? null,
-            updatedAt: new Date(),
-          },
-        })
-        .returning({ id: user.id });
+    const userMap = await seedUsers(db);
+    const adminUserId = userMap.get('admin@ceic.local');
 
-      if (!insertedUser) continue;
+    const courseMap = await seedCourses(db, adminUserId);
+    const disciplineMap = await seedDisciplines(db, adminUserId);
+    const peopleMap = await seedPeople(db, adminUserId);
 
-      const hashedPassword = await hashPassword(item.password);
-      const [existingAccount] = await db
-        .select({ id: account.id })
-        .from(account)
-        .where(and(eq(account.userId, insertedUser.id), eq(account.providerId, 'credential')))
-        .limit(1);
-
-      if (existingAccount) {
-        await db
-          .update(account)
-          .set({ password: hashedPassword, updatedAt: new Date() })
-          .where(eq(account.id, existingAccount.id));
-      } else {
-        await db.insert(account).values({
-          accountId: insertedUser.id,
-          providerId: 'credential',
-          userId: insertedUser.id,
-          password: hashedPassword,
-        });
-      }
-    }
-
-    for (const item of seedCourses) {
-      await db
-        .insert(courses)
-        .values({
-          title: item.title,
-          slug: item.slug,
-          description: item.description,
-          published: item.published,
-        })
-        .onConflictDoUpdate({
-          target: courses.slug,
-          set: {
-            title: item.title,
-            description: item.description,
-            published: item.published,
-            updatedAt: new Date(),
-          },
-        });
-    }
+    await seedCohorts(db, courseMap, disciplineMap, peopleMap, adminUserId);
+    await seedPages(db, adminUserId);
+    await seedNews(db, peopleMap, adminUserId);
+    await seedPartners(db, adminUserId);
+    await seedMentorships(db, peopleMap, adminUserId);
+    await seedSiteSettings(db, adminUserId);
 
     console.log(`[Seed] Concluido com sucesso para: ${connectionUrl.replace(/:[^:@]+@/, ':***@')}`);
   } finally {
@@ -103,7 +54,7 @@ export async function runSeeds(): Promise<void> {
   for (const url of urlsToSeed) {
     try {
       await seedDatabase(url);
-    } catch (error) {
+    } catch {
       console.warn(`[Seed] Instancia indisponivel para conexao: ${url.replace(/:[^:@]+@/, ':***@')}`);
     }
   }

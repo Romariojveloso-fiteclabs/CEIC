@@ -11,8 +11,10 @@ export interface SeedUser {
 export interface SeedCourse {
   title: string;
   slug: string;
+  shortDescription?: string;
   description: string;
-  published: boolean;
+  status: 'published' | 'draft' | 'archived';
+  publishedAt?: Date | null;
 }
 
 export const seedUsers: SeedUser[] = [
@@ -59,31 +61,41 @@ export const seedCourses: SeedCourse[] = [
   {
     title: 'Introducao ao Desenvolvimento Web Moderno',
     slug: 'introducao-desenvolvimento-web-moderno',
+    shortDescription: 'Fundamentos de arquitetura web e APIs RESTful.',
     description: 'Fundamentos de arquitetura web, protocolos HTTP, APIs RESTful e boas praticas de seguranca.',
-    published: true,
+    status: 'published',
+    publishedAt: new Date(),
   },
   {
     title: 'Arquitetura de Software e Clean Code',
     slug: 'arquitetura-software-clean-code',
+    shortDescription: 'Padroes de projeto e principios SOLID.',
     description: 'Padroes de projeto, principios SOLID, modularizacao e design de software sustentavel.',
-    published: true,
+    status: 'published',
+    publishedAt: new Date(),
   },
   {
     title: 'Seguranca e Autenticacao com OAuth e JWT',
     slug: 'seguranca-autenticacao-oauth-jwt',
+    shortDescription: 'Implementacao pratica de autenticacao e RBAC.',
     description: 'Implementacao pratica de autenticacao, RBAC, sessao segura e controle de acesso.',
-    published: true,
+    status: 'published',
+    publishedAt: new Date(),
   },
   {
     title: 'TypeScript Avancado e Design Patterns',
     slug: 'typescript-avancado-design-patterns',
+    shortDescription: 'Tipagem avancada, generics e decorators.',
     description: 'Tipagem avancada, generics, decorators e tecnicas robustas para aplicacoes escalaveis.',
-    published: false,
+    status: 'draft',
+    publishedAt: null,
   },
   {
     title: 'Microsservicos com NestJS e Docker',
     slug: 'microsservicos-nestjs-docker',
+    shortDescription: 'Construcao e orquestracao de servicos conteinerizados.',
     description: 'Construcao e orquestracao de servicos conteinerizados de alta disponibilidade.',
-    published: false,
+    status: 'draft',
+    publishedAt: null,
   },
 ];
