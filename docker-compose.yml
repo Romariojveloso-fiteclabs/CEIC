@@ -62,8 +62,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - media_data:/app/uploads
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+process.env.PORT+'/api/courses').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
       interval: 5s
       timeout: 3s
       retries: 15
@@ -76,3 +78,4 @@ networks:
 volumes:
   postgres_data:
   postgres_dev_data:
+  media_data:

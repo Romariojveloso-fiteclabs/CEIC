@@ -2,8 +2,7 @@ import { Injectable, type OnApplicationShutdown, type OnModuleInit } from '@nest
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import { config } from '../config/config.js';
-import * as authSchema from './schema/auth.schema.js';
-import { courses } from './schema/courses.schema.js';
+import * as schema from './schema/index.js';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
@@ -12,7 +11,7 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
     connectionTimeoutMillis: 5000,
   });
 
-  readonly db = drizzle(this.pool, { schema: { ...authSchema, courses } });
+  readonly db = drizzle(this.pool, { schema });
 
   async onModuleInit() {
     await this.pool.query('SELECT 1');

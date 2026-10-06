@@ -98,6 +98,17 @@ export async function setupSwagger(app: INestApplication): Promise<void> {
     .addTag('auth', 'Autenticacao e gestao de sessao do usuario')
     .addTag('admin', 'Operacoes administrativas de usuarios e permissoes')
     .addTag('courses', 'Gerenciamento de cursos e conteudos')
+    .addTag('cohorts', 'Gerenciamento de turmas, disciplinas e cronogramas')
+    .addTag('disciplines', 'Gerenciamento de disciplinas e ementas')
+    .addTag('people', 'Gerenciamento de docentes, mentores e equipe')
+    .addTag('pages', 'Gerenciamento de páginas institucionais em Markdown')
+    .addTag('news', 'Gerenciamento de notícias e comunicados')
+    .addTag('partners', 'Gerenciamento de empresas parceiras')
+    .addTag('mentorships', 'Gerenciamento de programas de mentoria')
+    .addTag('media', 'Armazenamento e gerenciamento de arquivos de mídia')
+    .addTag('site-settings', 'Configurações institucionais do site')
+    .addTag('audit', 'Consulta aos logs de auditoria do sistema')
+    .addTag('health', 'Verificações de integridade e prontidão da aplicação')
     .addBearerAuth(
       {
         type: 'http',

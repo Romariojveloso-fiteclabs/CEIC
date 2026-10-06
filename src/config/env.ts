@@ -62,6 +62,10 @@ function readEnv() {
     authUrl,
     frontendUrl,
     corsOrigins,
+    mediaStoragePath: process.env.MEDIA_STORAGE_PATH?.trim() || './uploads',
+    mediaMaxFileSize: Number(process.env.MEDIA_MAX_FILE_SIZE || 10485760),
+    defaultPageSize: Number(process.env.DEFAULT_PAGE_SIZE || 20),
+    maxPageSize: Number(process.env.MAX_PAGE_SIZE || 100),
     resendApiKey: process.env.RESEND_API_KEY?.trim() || undefined,
     emailFrom: required('EMAIL_FROM'),
   });

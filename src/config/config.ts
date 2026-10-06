@@ -10,4 +10,6 @@ export const config = Object.freeze({
   },
   cors: { origin: env.corsOrigins, credentials: true },
   email: { apiKey: env.resendApiKey, from: env.emailFrom },
+  media: { storagePath: env.mediaStoragePath, maxFileSize: env.mediaMaxFileSize },
+  pagination: { defaultPageSize: env.defaultPageSize, maxPageSize: env.maxPageSize },
 });
