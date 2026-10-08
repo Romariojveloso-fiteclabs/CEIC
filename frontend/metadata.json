@@ -1,0 +1,6 @@
+{
+  "name": "CEIC - Pós-Graduação em Defesa Cibernética",
+  "description": "Centro de Excelência em Inteligência Cibernética - Pós-Graduação Lato Sensu em Defesa Cibernética e Resposta a Incidentes (Blue Team). Formação técnica avançada, laboratórios práticos e residência tecnológica.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

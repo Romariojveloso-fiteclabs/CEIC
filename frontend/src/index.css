@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --brand-navy: #021C2F;
+  --brand-deep: #000B13;
+  --brand-identity: #508EBC;
+  --brand-light: #80B7DF;
+  --brand-bg: #F7F9FB;
+  --brand-surface: #FFFFFF;
+  --brand-surface-secondary: #F3F3F3;
+  --brand-text: #26292D;
+  --brand-border: #D5D8DC;
+}
+
+html.dark {
+  --brand-navy: #E6F1FA;
+  --brand-deep: #000B13;
+  --brand-identity: #508EBC;
+  --brand-light: #80B7DF;
+  --brand-bg: #000B13;
+  --brand-surface: #021C2F;
+  --brand-surface-secondary: #041624;
+  --brand-text: #F7F9FB;
+  --brand-border: #0e304b;
+}
+
+@theme {
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-identity: var(--brand-identity);
+  --color-brand-light: var(--brand-light);
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-surface-secondary: var(--brand-surface-secondary);
+  --color-brand-text: var(--brand-text);
+  --color-brand-border: var(--brand-border);
+
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark {
+  background-color: #000B13;
+  color: #F7F9FB;
+}
+
+@keyframes cursor-blink {
+  0%, 49.9% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1s infinite;
+}
+
+/* ========================================================================= */
+/* Custom Aesthetic Scrollbar (Light & Dark Mode)                             */
+/* Matches CEIC Cyber Navy, Slate & Electric Blue identity                    */
+/* ========================================================================= */
+
+/* Standard CSS (Firefox and modern browsers) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 142, 188, 0.45) transparent;
+}
+
+html.dark * {
+  scrollbar-color: rgba(80, 142, 188, 0.45) rgba(0, 11, 19, 0.6);
+}
+
+/* WebKit / Chromium / Edge / Safari */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(213, 216, 220, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 142, 188, 0.45);
+  border-radius: 9999px;
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #508EBC;
+  box-shadow: 0 0 6px rgba(80, 142, 188, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #417fae;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark Mode Scrollbars */
+html.dark ::-webkit-scrollbar-track {
+  background: rgba(0, 11, 19, 0.75);
+  border-radius: 9999px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(80, 142, 188, 0.45);
+  border: 1.5px solid rgba(0, 11, 19, 0.8);
+  border-radius: 9999px;
+  background-clip: padding-box;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #508EBC;
+  box-shadow: 0 0 8px rgba(80, 142, 188, 0.6);
+}
+
+html.dark ::-webkit-scrollbar-thumb:active {
+  background: #80B7DF;
+}
+
+html.dark ::-webkit-scrollbar-corner {
+  background: #000B13;
+}
+
